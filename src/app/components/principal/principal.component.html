@@ -1,0 +1,83 @@
+<main class="page--content">
+    <form>
+        <div class="legend">
+            <header class="legend_header">
+                <h5>Legenda</h5>
+            </header>
+            <ul class="legend__list">
+                <li class="legend__list__item" *ngFor="let classe of classes">
+                    <div class="legend__color" [style.background-color]="classe.cor"
+                         [style.border-color]="classe.cor"></div>
+                    <p>{{classe.legenda}}</p>
+                </li>
+            </ul>
+        </div>
+        <div class="menu-opcoes" [formGroup]="filterGroup">
+            <header class="legend_header">
+                <h5>Camadas</h5>
+            </header>
+            <ul class="legend__list">
+                <li class="legend__list__item">
+                    <input id="casos" type="radio" formControlName="filtroSelecionado" value="casos"/>
+                    <label for="casos">Infectados</label>
+                </li>
+                <li class="legend__list__item">
+                    <input id="recuperados" type="radio" formControlName="filtroSelecionado" value="recuperados"/>
+                    <label for="recuperados">Recuperados</label>
+                </li>
+                <li class="legend__list__item">
+                    <input id="internados" type="radio" formControlName="filtroSelecionado" value="internados"/>
+                    <label for="internados">Internados</label>
+                </li>
+                <li class="legend__list__item">
+                    <input id="internados_uti" type="radio" formControlName="filtroSelecionado" value="internadosUti"/>
+                    <label for="internados_uti">Internados UTI</label>
+                </li>
+                <li class="legend__list__item">
+                    <input id="obitos" type="radio" formControlName="filtroSelecionado" value="obitos"/>
+                    <label for="obitos">Óbitos</label>
+                </li>
+            </ul>
+        </div>
+    </form>
+    <ngx-smart-modal #about identifier="about">
+        <h3>Sobre</h3>
+        <span>
+            <p>
+                Sistema desenvolvido por iniciativa própria utilizando dados abertos da <a
+                    href="https://www.saude.sc.gov.br"
+                    target="_blank">
+                Secretaria de Estado da Saúde de Santa Catarina</a>
+            </p>
+            <p>Dados disponíveis em: <a href="http://dados.sc.gov.br/group/covid-19" target="_blank">Portal de Dados Abertos do Estado de Santa Catarina</a></p>
+            <p>Informações adicionais podem ser adquiridas em <a href="http://www.coronavirus.sc.gov.br/"
+                                                                 target="_blank">www.coronavirus.sc.gov.br/</a></p>
+            <div *ngIf="resumo">
+            <h4>Tabela de dados</h4>
+            <p><strong>
+                Data da última publicação: {{resumo.publicacao | date:"fullDate"}}
+            </strong></p>
+            <table>
+                <tr>
+                    <th>Município</th>
+                    <th>Infectados</th>
+                    <th>Recuperados</th>
+                    <th>Internados</th>
+                    <th>Internados UTI</th>
+                    <th>Óbitos</th>
+                </tr>
+                <tr *ngFor="let dado of resumo.dados">
+                    <td>{{dado.nome}}</td>
+                    <td>{{dado.casos}}</td>
+                    <td>{{dado.recuperados}}</td>
+                    <td>{{dado.internados}}</td>
+                    <td>{{dado.internadosUti}}</td>
+                    <td>{{dado.obitos}}</td>
+                </tr>
+            </table>
+            </div>
+        </span>
+    </ngx-smart-modal>
+    <div class="map__container" leaflet (leafletMapReady)="onMapReady($event)" [leafletOptions]="options">
+    </div>
+</main>
