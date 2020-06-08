@@ -18,6 +18,7 @@
             </header>
             <ul class="legend__list" *ngIf="resumo">
                 <li class="legend__list__item">Infectados: <strong>{{resumo.casos}}</strong></li>
+                <li class="legend__list__item">Casos ativos: <strong>{{resumo.casosAtivos}}</strong></li>
                 <li class="legend__list__item">Recuperados: <strong>{{resumo.recuperados}}</strong></li>
                 <li class="legend__list__item">Internados: <strong>{{resumo.internados}}</strong></li>
                 <li class="legend__list__item">Internados UTI: <strong>{{resumo.internadosUti}}</strong></li>
@@ -32,6 +33,10 @@
                 <li class="legend__list__item">
                     <input id="casos" type="radio" formControlName="filtroSelecionado" value="casos"/>
                     <label for="casos">Infectados</label>
+                </li>
+                <li class="legend__list__item">
+                    <input id="ativos" type="radio" formControlName="filtroSelecionado" value="casosAtivos"/>
+                    <label for="ativos">Casos ativos</label>
                 </li>
                 <li class="legend__list__item">
                     <input id="recuperados" type="radio" formControlName="filtroSelecionado" value="recuperados"/>
@@ -88,6 +93,12 @@
                 </tr>
             </table>
             </div>
+            <ul class="repos">
+                <li>Este sistema possui o código aberto, contribua com os repositórios:</li>
+                <li><a href="https://github.com/diegoantonelli/mapacovidsc-frontend"><i class="fa fa-github fa-3"></i></a></li>
+                <li><a href="https://github.com/diegoantonelli/mapacovidsc-backend"><i class="fa fa-github fa-3"></i></a></li>
+            </ul>
+            <span>&copy; 2020 - <a href="https://github.com/diegoantonelli">Diego Antonelli</a></span>
         </span>
     </ngx-smart-modal>
     <div class="map__container" leaflet (leafletMapReady)="onMapReady($event)" [leafletOptions]="options">

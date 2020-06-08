@@ -104,6 +104,7 @@ export class PrincipalComponent implements OnInit {
         const {dados} = this.resumo;
         const numeros = {
             casos: dados.map(d => d.casos),
+            casosAtivos: dados.map(d => d.casosAtivos),
             obitos: dados.map(d => d.obitos),
             recuperados: dados.map(d => d.recuperados),
             internados: dados.map(d => d.internados),
@@ -113,6 +114,10 @@ export class PrincipalComponent implements OnInit {
             casos: {
                 min: Math.min(...numeros.casos),
                 max: Math.max(...numeros.casos),
+            },
+            casosAtivos: {
+                min: Math.min(...numeros.casosAtivos),
+                max: Math.max(...numeros.casosAtivos),
             },
             obitos: {
                 min: Math.min(...numeros.obitos),
@@ -142,7 +147,7 @@ export class PrincipalComponent implements OnInit {
         this.classes = [];
         const passo = this.escalas[this.filtroSelecionado].passo;
         [1, 2, 3, 4, 5].map((camada, index, array) => {
-            let legenda = `${(array[index - 1] * passo)+1} a ${camada * passo}`;
+            let legenda = `${(array[index - 1] * passo) + 1} a ${camada * passo}`;
             if (camada === 1) {
                 legenda = `1 a ${passo}`;
             }
@@ -158,6 +163,11 @@ export class PrincipalComponent implements OnInit {
             .subscribe((response: any) => {
                 this.resumo = response;
                 this.resumo.dados.sort((a, b) => a.nome.localeCompare(b.nome));
+                this.resumo.casosAtivos = this.resumo.casos - (this.resumo.recuperados + this.resumo.obitos);
+                this.resumo.dados = this.resumo.dados.map(dado => ({
+                    ...dado,
+                    casosAtivos: dado.casos - (dado.recuperados + dado.obitos)
+                }));
                 if (response && response.dados.length > 0) {
                     this.criarEscalas();
                     this.atualizarMapa();
@@ -193,6 +203,7 @@ export class PrincipalComponent implements OnInit {
     private getCorCamada(camada: number) {
         switch (this.filtroSelecionado) {
             case 'casos':
+            case 'casosAtivos':
                 return getCoresCasos(camada);
             case 'obitos':
                 return getCoresObitos(camada);
@@ -239,6 +250,7 @@ export class PrincipalComponent implements OnInit {
                     return `<h2>${dado.nome}</h2>
                             <ul>
                                <li>Infectados: <strong>${dado.casos}</strong></li>
+                               <li>Casos ativos: <strong>${dado.casosAtivos}</strong></li>
                                <li>Recuperados: <strong>${dado.recuperados}</strong></li>
                                <li>Internados: <strong>${dado.internados}</strong></li>
                                <li>Internados UTI: <strong>${dado.internadosUti}</strong></li>
@@ -259,6 +271,7 @@ interface DadosCovid {
     recuperados: number;
     obitos: number;
     casos: number;
+    casosAtivos: number;
     dados: DadosMunicipio[];
 }
 
@@ -270,5 +283,6 @@ interface DadosMunicipio {
     recuperados: number;
     obitos: number;
     casos: number;
+    casosAtivos: number;
     dados: any[];
 }

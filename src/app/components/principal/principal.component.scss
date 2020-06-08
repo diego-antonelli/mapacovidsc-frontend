@@ -44,7 +44,7 @@ LEGENDA
   line-height: 120%
 }
 
-.legend__color{
+.legend__color {
   width: 20px;
   height: 20px;
   border: 1.5px solid;
@@ -75,4 +75,19 @@ LEGENDA
   right: 10px;
   width: 180px;
   transition: all 0.3s ease-in;
+}
+
+.fa-3 {
+  font-size: 3em;
+}
+
+.repos {
+  display: flex;
+  flex-direction: row;
+  margin: 1em 0;
+  align-items: center;
+
+  li{
+    margin-right: 0.5em;
+  }
 }
