@@ -8,8 +8,9 @@ import {RequestService} from '../../services/request.service';
 import {environment} from '../../../environments/environment';
 import {Preloader} from '../utils/preloader';
 import {NgxSmartModalService} from 'ngx-smart-modal';
-import {getCoresCasos, getCoresInternados, getCoresInternadosUTI, getCoresObitos, getCoresRecuperados} from '../utils/cores';
+import {getCoresCasos, getCoresInternados, getCoresObitos, getCoresRecuperados} from '../utils/cores';
 import {FormBuilder, FormGroup} from '@angular/forms';
+import { Angular5Csv } from 'angular5-csv/dist/Angular5-csv';
 
 @Component({
     selector: 'app-principal',
@@ -24,10 +25,11 @@ export class PrincipalComponent implements OnInit {
     private camadaAnterior = null;
     filtroSelecionado = 'casos';
 
-    private baseMap = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    private baseMap = L.tileLayer('https://api.mapbox.com/styles/v1/{styleUser}/{styleId}/tiles/256/{z}/{x}/{y}@2x?access_token={accessToken}', {
         maxZoom: 18,
         minZoom: 7,
-        id: 'mapbox.light',
+        styleUser: environment.MAPBOX_STYLE_USER,
+        styleId: environment.MAPBOX_STYLE_ID,
         accessToken: environment.MAPBOX_TOKEN,
         attribution: `&copy; <a href='https://www.mapbox.com/about/maps/'>Mapbox</a>
 &copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>
@@ -166,7 +168,13 @@ export class PrincipalComponent implements OnInit {
                 this.resumo.casosAtivos = this.resumo.casos - (this.resumo.recuperados + this.resumo.obitos);
                 this.resumo.dados = this.resumo.dados.map(dado => ({
                     ...dado,
-                    casosAtivos: dado.casos - (dado.recuperados + dado.obitos)
+                    casosAtivos: dado.casos - (dado.recuperados + dado.obitos),
+                    dados: dado.dados.map(d => {
+                        d.inicioSintomas = new Date(d.inicioSintomas).toLocaleDateString();
+                        d.dataResultado = new Date(d.dataResultado).toLocaleDateString();
+                        d.dataObito = d.obito ? new Date(d.dataObito).toLocaleDateString() : null;
+                        return d;
+                    })
                 }));
                 if (response && response.dados.length > 0) {
                     this.criarEscalas();
@@ -210,9 +218,8 @@ export class PrincipalComponent implements OnInit {
             case 'recuperados':
                 return getCoresRecuperados(camada);
             case 'internados':
-                return getCoresInternados(camada);
             case 'internadosUti':
-                return getCoresInternadosUTI(camada);
+                return getCoresInternados(camada);
         }
     }
 
@@ -224,9 +231,6 @@ export class PrincipalComponent implements OnInit {
         if (this.camada) {
             const municipiosFiltrados = resumo.dados.filter(d => d[this.filtroSelecionado] > 0).map(d => d.codigoIbge);
             const camadaProjetada = L.Proj.geoJson(this.camada, {
-                filter: (feature) => {
-                    return municipiosFiltrados.includes(Number(feature.properties.CD_GEOCODM));
-                },
                 style: (feature) => {
                     if (municipiosFiltrados.includes(Number(feature.properties.CD_GEOCODM))) {
                         const dado = this.resumo.dados.filter(m => m.codigoIbge === Number(feature.properties.CD_GEOCODM))[0];
@@ -238,23 +242,44 @@ export class PrincipalComponent implements OnInit {
                         };
                     }
                     return {
-                        color: '#EAEAEA',
-                        fillOpacity: 0.5,
-                        weight: 1,
-                        opacity: 1
+                        color: '#FFF',
+                        fillOpacity: 0.4,
+                        weight: 0,
+                        opacity: 0
                     };
                 }
             })
                 .bindPopup(function (layer) {
-                    const dado = resumo.dados.filter(m => m.codigoIbge === Number(layer.feature.properties.CD_GEOCODM))[0];
+                    let dado: DadosMunicipio = resumo.dados.filter(m => m.codigoIbge === Number(layer.feature.properties.CD_GEOCODM))[0];
+                    if (!dado) {
+                        dado = {
+                            internados: 0,
+                            internadosUti: 0,
+                            recuperados: 0,
+                            obitos: 0,
+                            casos: 0,
+                            casosAtivos: 0,
+                            nome: layer.feature.properties.NM_MUNICIP,
+                            codigoIbge: layer.feature.properties.CD_GEOCODM,
+                            dados: []
+                        };
+                    }
+                    const idades = {
+                        internados: dado.dados.filter(d => d.internado).map(d => d.idade),
+                        internadosUti: dado.dados.filter(d => d.internadoUti).map(d => d.idade),
+                        recuperados: dado.dados.filter(d => d.recuperado).map(d => d.idade),
+                        obitos: dado.dados.filter(d => d.obito).map(d => d.idade),
+                        casos: dado.dados.map(d => d.idade),
+                        casosAtivos: dado.dados.filter(d => !d.recuperado && !d.obito).map(d => d.idade),
+                    };
                     return `<h2>${dado.nome}</h2>
                             <ul>
-                               <li>Infectados: <strong>${dado.casos}</strong></li>
-                               <li>Casos ativos: <strong>${dado.casosAtivos}</strong></li>
-                               <li>Recuperados: <strong>${dado.recuperados}</strong></li>
-                               <li>Internados: <strong>${dado.internados}</strong></li>
-                               <li>Internados UTI: <strong>${dado.internadosUti}</strong></li>
-                               <li>Óbitos: <strong>${dado.obitos}</strong></li>
+                               <li>Infectados: <strong>${dado.casos}</strong> ${getIdades('casos', idades)}</li>
+                               <li>Casos ativos: <strong>${dado.casosAtivos}</strong> ${getIdades('casosAtivos', idades)}</li>
+                               <li>Recuperados: <strong>${dado.recuperados}</strong> ${getIdades('recuperados', idades)}</li>
+                               <li>Internados: <strong>${dado.internados}</strong> ${getIdades('internados', idades)}</li>
+                               <li>Internados UTI: <strong>${dado.internadosUti}</strong> ${getIdades('internadosUti', idades)}</li>
+                               <li>Óbitos: <strong>${dado.obitos}</strong> ${getIdades('obitos', idades)}</li>
                             </ul>`;
                 })
                 .addTo(this.map);
@@ -262,6 +287,45 @@ export class PrincipalComponent implements OnInit {
             this.map.fitBounds(camadaProjetada.getBounds());
         }
     }
+
+    public exportarDados() {
+        const data = this.resumo.dados.flatMap(d => d.dados);
+        const prunedData = data.map(dados => {
+            Object.keys(dados).forEach(key => {
+                if (typeof dados[key] === 'boolean') {
+                    if (!!dados[key]) {
+                        dados[key] = 'SIM';
+                    } else {
+                        dados[key] = 'NÃO';
+                    }
+                }
+            });
+            delete dados.publicacao;
+            delete dados.codigoIbge;
+            delete dados.latitude;
+            delete dados.longitude;
+            return dados;
+        });
+        // tslint:disable-next-line:no-unused-expression
+        new Angular5Csv(prunedData, 'Dados COVID SC', {
+            fieldSeparator: ';',
+            decimalseparator: '.',
+            headers: ['Recuperado', 'Início sintomas',
+                'Data Coleta', 'Sintomas', 'Comorbidades', 'Internado',
+                'Internado UTI', 'Sexo', 'Município', 'Óbito', 'Data óbito',
+                'Idade', 'Data resultado', 'Critério de confirmação',
+            'Tipo de teste', 'Município de confirmação', 'Sus', 'Sivep', 'Lacen',
+                'Laboratório privado', 'Nome do laboratório'],
+            nullToEmptyString: true,
+        });
+    }
+}
+
+function getIdades(key: string, idades: any) {
+    if (idades[key] && idades[key].length > 0) {
+        return `<i>(entre ${Math.min(...idades[key])} e ${Math.max(...idades[key])} anos)</i>`;
+    }
+    return '';
 }
 
 interface DadosCovid {

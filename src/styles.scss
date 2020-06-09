@@ -136,13 +136,17 @@ th{
   border-radius: 0;
 }
 
-.leaflet-popup-content h2 {
-  font-weight: bold;
-  font-size: 14px;
-  text-transform: uppercase;
-  margin-bottom: 8px;
+.leaflet-popup-content {
+  h2 {
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  table {
+    padding-right: 1em;
+  }
 }
-
 .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
   border: none  !important;
   box-shadow: unset !important;
@@ -155,7 +159,7 @@ th{
 }
 
 .leaflet-bar a {
-  background: #634141 no-repeat center !important;
+  background: #3f1f4f no-repeat center !important;
   border-radius: 0 !important;
   width: 32px  !important;
   height: 32px  !important;
@@ -168,7 +172,7 @@ th{
 }
 
 .leaflet-custom-control {
-  background: #634141 no-repeat center !important;
+  background: #3f1f4f no-repeat center !important;
   color: #fff !important;
   border-radius: 0 !important;
   width: 32px !important;
@@ -181,7 +185,7 @@ th{
 }
 
 .leaflet-help-control {
-  background-color: #ab6b6b !important;
+  background-color: #41395c !important;
   border: 0px;
 }
 

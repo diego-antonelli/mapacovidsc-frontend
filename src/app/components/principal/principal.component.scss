@@ -91,3 +91,22 @@ LEGENDA
     margin-right: 0.5em;
   }
 }
+
+table{
+  width: 100%;
+  margin: 1em 0;
+}
+
+ul {
+  margin-top: 1rem;
+  li{
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+    line-height: 120%;
+
+    strong{
+      margin: 0 5px;
+    }
+  }
+}

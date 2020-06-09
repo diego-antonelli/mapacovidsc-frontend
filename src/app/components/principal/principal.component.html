@@ -16,13 +16,13 @@
             <header class="legend_header">
                 <h5>Totais</h5>
             </header>
-            <ul class="legend__list" *ngIf="resumo">
-                <li class="legend__list__item">Infectados: <strong>{{resumo.casos}}</strong></li>
-                <li class="legend__list__item">Casos ativos: <strong>{{resumo.casosAtivos}}</strong></li>
-                <li class="legend__list__item">Recuperados: <strong>{{resumo.recuperados}}</strong></li>
-                <li class="legend__list__item">Internados: <strong>{{resumo.internados}}</strong></li>
-                <li class="legend__list__item">Internados UTI: <strong>{{resumo.internadosUti}}</strong></li>
-                <li class="legend__list__item">Óbitos: <strong>{{resumo.obitos}}</strong></li>
+            <ul *ngIf="resumo">
+                <li>Infectados: <strong>{{resumo.casos}}</strong></li>
+                <li>Casos ativos: <strong>{{resumo.casosAtivos}}</strong></li>
+                <li>Recuperados: <strong>{{resumo.recuperados}}</strong></li>
+                <li>Internados: <strong>{{resumo.internados}}</strong></li>
+                <li>Internados UTI: <strong>{{resumo.internadosUti}}</strong></li>
+                <li>Óbitos: <strong>{{resumo.obitos}}</strong></li>
             </ul>
         </div>
         <div class="menu-opcoes" [formGroup]="filterGroup">
@@ -70,10 +70,8 @@
             <p>Informações adicionais podem ser adquiridas em <a href="http://www.coronavirus.sc.gov.br/"
                                                                  target="_blank">www.coronavirus.sc.gov.br/</a></p>
             <div *ngIf="resumo">
-            <h4>Tabela de dados</h4>
-            <p><strong>
-                Data da última publicação: {{resumo.publicacao | date:"fullDate"}}
-            </strong></p>
+                <h4>Tabela de dados <a (click)="exportarDados()" style="cursor: pointer" title="Download da tabela de dados"><i class="fa fa-file-excel" style="color: #008000"></i></a> </h4>
+                <p><strong>Data da última publicação: {{resumo.publicacao | date:"fullDate"}}</strong></p>
             <table>
                 <tr>
                     <th>Município</th>
@@ -95,8 +93,8 @@
             </div>
             <ul class="repos">
                 <li>Este sistema possui o código aberto, contribua com os repositórios:</li>
-                <li><a href="https://github.com/diegoantonelli/mapacovidsc-frontend"><i class="fa fa-github fa-3"></i></a></li>
-                <li><a href="https://github.com/diegoantonelli/mapacovidsc-backend"><i class="fa fa-github fa-3"></i></a></li>
+                <li><a href="https://github.com/diegoantonelli/mapacovidsc-frontend" title="Frontend"><i class="fa fa-github fa-3"></i></a></li>
+                <li><a href="https://github.com/diegoantonelli/mapacovidsc-backend" title="Backend"><i class="fa fa-github fa-3"></i></a></li>
             </ul>
             <span>&copy; 2020 - <a href="https://github.com/diegoantonelli">Diego Antonelli</a></span>
         </span>

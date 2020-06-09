@@ -1,49 +1,34 @@
 export function getCoresCasos(camada: number) {
     switch (camada) {
         case 1:
-            return '#fc8d59';
+            return '#eabeb2';
         case 2:
-            return '#ef6548';
+            return '#d67e66';
         case 3:
-            return '#d7301f';
+            return '#c23d19';
         case 4:
-            return '#b30000';
+            return '#962000';
         default:
-            return '#7f0000';
+            return '#5e1400';
     }
 }
 
 export function getCoresRecuperados(camada: number) {
     switch (camada) {
         case 1:
-            return '#67a9cf';
+            return '#99c3bb';
         case 2:
-            return '#3690c0';
+            return '#4d9689';
         case 3:
-            return '#02818a';
+            return '#026957';
         case 4:
-            return '#016c59';
+            return '#01493c';
         default:
-            return '#014636';
+            return '#001f1a';
     }
 }
 
 export function getCoresInternados(camada: number) {
-    switch (camada) {
-        case 1:
-            return '#6baed6';
-        case 2:
-            return '#4292c6';
-        case 3:
-            return '#2171b5';
-        case 4:
-            return '#08519c';
-        default:
-            return '#08306b';
-    }
-}
-
-export function getCoresInternadosUTI(camada: number) {
     switch (camada) {
         case 1:
             return '#9e9ac8';
@@ -61,14 +46,14 @@ export function getCoresInternadosUTI(camada: number) {
 export function getCoresObitos(camada: number) {
     switch (camada) {
         case 1:
-            return '#bdbdbd';
+            return '#b5b5b6';
         case 2:
-            return '#969696';
+            return '#909092';
         case 3:
-            return '#737373';
+            return '#47474a';
         case 4:
-            return '#525252';
+            return '#2a2a2c';
         case 5:
-            return '#252525';
+            return '#0e0e0e';
     }
 }
