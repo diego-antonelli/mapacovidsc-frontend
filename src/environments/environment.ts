@@ -4,8 +4,10 @@
 
 export const environment = {
   production: false,
-  API_URL: 'https://mapacovidsc.herokuapp.com/api/v1',
-  MAPBOX_TOKEN: ''
+  API_URL: 'SUA URL',
+  MAPBOX_TOKEN: 'SEU TOKEN DO MAPBOX',
+  MAPBOX_STYLE_USER: 'SEU ID DO MAPBOX',
+  MAPBOX_STYLE_ID: 'SEU ESTILO PERSONALIZADO DO MAPBOX'
 };
 
 /*

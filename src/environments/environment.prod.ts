@@ -1,5 +1,7 @@
 export const environment = {
-  production: true,
-  API_URL: 'https://mapacovidsc.herokuapp.com/api/v1',
-  MAPBOX_TOKEN: ''
+  production: false,
+  API_URL: 'SUA URL',
+  MAPBOX_TOKEN: 'SEU TOKEN DO MAPBOX',
+  MAPBOX_STYLE_USER: 'SEU ID DO MAPBOX',
+  MAPBOX_STYLE_ID: 'SEU ESTILO PERSONALIZADO DO MAPBOX'
 };
