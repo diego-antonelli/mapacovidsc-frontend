@@ -168,13 +168,7 @@ export class PrincipalComponent implements OnInit {
                 this.resumo.casosAtivos = this.resumo.casos - (this.resumo.recuperados + this.resumo.obitos);
                 this.resumo.dados = this.resumo.dados.map(dado => ({
                     ...dado,
-                    casosAtivos: dado.casos - (dado.recuperados + dado.obitos),
-                    dados: dado.dados.map(d => {
-                        d.inicioSintomas = new Date(d.inicioSintomas).toLocaleDateString();
-                        d.dataResultado = new Date(d.dataResultado).toLocaleDateString();
-                        d.dataObito = d.obito ? new Date(d.dataObito).toLocaleDateString() : null;
-                        return d;
-                    })
+                    casosAtivos: dado.casos - (dado.recuperados + dado.obitos)
                 }));
                 if (response && response.dados.length > 0) {
                     this.criarEscalas();
@@ -292,12 +286,22 @@ export class PrincipalComponent implements OnInit {
         const data = this.resumo.dados.flatMap(d => d.dados);
         const prunedData = data.map(dados => {
             Object.keys(dados).forEach(key => {
-                if (typeof dados[key] === 'boolean') {
-                    if (!!dados[key]) {
-                        dados[key] = 'SIM';
-                    } else {
-                        dados[key] = 'NÃO';
-                    }
+                switch (typeof dados[key]) {
+                    case 'boolean':
+                        if (!!dados[key]) {
+                            dados[key] = 'SIM';
+                        } else {
+                            dados[key] = 'NÃO';
+                        }
+                        break;
+                    case 'string':
+                        if (dados[key] === 'NULL') {
+                            dados[key] = '';
+                        }
+                        if (dados[key] && isDate(dados[key])) {
+                            dados[key] = new Date(dados[key]).toLocaleDateString();
+                        }
+                        break;
                 }
             });
             delete dados.publicacao;
@@ -315,10 +319,17 @@ export class PrincipalComponent implements OnInit {
                 'Internado UTI', 'Sexo', 'Município', 'Óbito', 'Data óbito',
                 'Idade', 'Data resultado', 'Critério de confirmação',
             'Tipo de teste', 'Município de confirmação', 'Sus', 'Sivep', 'Lacen',
-                'Laboratório privado', 'Nome do laboratório'],
+                'Laboratório privado', 'Nome do laboratório', 'Teste rápido',
+            'PCR', 'Data de internação', 'Data de entrada na UTI', 'Regional de saúde',
+            'Data de evolução do caso', 'Data de saída da UTI', 'Bairro'],
             nullToEmptyString: true,
         });
     }
+}
+
+function isDate(_date){
+    const _regExp  = new RegExp('^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]+)?(Z)?$');
+    return _regExp.test(_date);
 }
 
 function getIdades(key: string, idades: any) {
