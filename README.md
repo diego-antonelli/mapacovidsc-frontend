@@ -1,5 +1,7 @@
 # Mapa Covid SC - Frontend
 
+Frontend para o projeto [Mapa Covid SC](https://mapacovidsc.com.br)
+
 ## Build
 
 Execute `ng build` para efetuar o bundle do projeto. Os artefatos estarão disponíveis no diretório `dist/`. Use a flag `--prod` para bundle de produção.
