@@ -22,7 +22,7 @@
     "core-js": "^2.5.4",
     "leaflet": "^1.5.1",
     "ngx-alerts": "^4.0.0",
-    "ngx-smart-modal": "^7.1.1",
+    "ngx-smart-modal": "^7.4.1",
     "ngx-spinner": "^8.1.0",
     "proj4leaflet": "^1.0.2",
     "rxjs": "6.5.5",
