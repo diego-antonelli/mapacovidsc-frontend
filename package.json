@@ -20,7 +20,7 @@
     "@asymmetrik/ngx-leaflet": "^4.0.0",
     "angular5-csv": "^0.2.11",
     "core-js": "^2.5.4",
-    "leaflet": "^1.5.1",
+    "leaflet": "^1.7.1",
     "ngx-alerts": "^4.0.0",
     "ngx-smart-modal": "^7.1.1",
     "ngx-spinner": "^8.1.0",
